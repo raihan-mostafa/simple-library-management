@@ -54,7 +54,7 @@ void ReadGivens()
     FILE* lg=fopen("issued books.txt","r");
 
     int g=0;
-    while(fscanf(lg, "%d ",&givenList[g].num)==1)
+    while(fscanf(lg, "%d",&givenList[g].num)==1)
     {
         fscanf(lg, " %[^\n]", givenList[g].given_name);
         fscanf(lg, " %[^\n]", givenList[g].student_name);
@@ -81,26 +81,28 @@ void ReadStudent()
     fclose(ls);
 }
 
-void ShowBooks(struct Books bookList[100], int nob){
-     printf("\e[1mid\t | Book name |  \tAuthor name | \tQuantity\e[m\n");
-        for(int i=0; i<nob; i++)
-        {
-            bookList[i].id=i+1;
-            printf("\n%2d|", bookList[i].id);
-            printf("%17s|", bookList[i].book_name);
-            printf("%17s|", bookList[i].author_name);
-            printf("%10d", bookList[i].quantity);
-        }
+void ShowBooks(struct Books bookList[100], int nob)
+{
+    printf("\e[1mid\t | Book name |  \tAuthor name | \tQuantity\e[m\n");
+    for(int i=0; i<nob; i++)
+    {
+        bookList[i].id=i+1;
+        printf("\n%2d|", bookList[i].id);
+        printf("%17s|", bookList[i].book_name);
+        printf("%17s|", bookList[i].author_name);
+        printf("%10d", bookList[i].quantity);
+    }
 }
 
-void PrintBookDetails(FILE* lm, struct Books bookList[100], int nob){
+void PrintBookDetails(FILE* lm, struct Books bookList[100], int nob)
+{
     for(int i=0; i<nob; i++)
-        {
-            fprintf(lm, "\n%d\n", bookList[i].id);
-            fprintf(lm, "%s\n", bookList[i].book_name);
-            fprintf(lm, "%s\n", bookList[i].author_name);
-            fprintf(lm, "%d\n", bookList[i].quantity);
-        }
+    {
+        fprintf(lm, "\n%d\n", bookList[i].id);
+        fprintf(lm, "%s\n", bookList[i].book_name);
+        fprintf(lm, "%s\n", bookList[i].author_name);
+        fprintf(lm, "%d\n", bookList[i].quantity);
+    }
 }
 
 int main()
@@ -186,7 +188,7 @@ int main()
         }
         else if(m==3)
         {
-             system("cls");
+            system("cls");
             /// Display Books By auther
 
             Readfile();
@@ -212,7 +214,7 @@ int main()
         }
         else if(m==4)
         {
-             system("cls");
+            system("cls");
             ///issue books
             Readfile();
             if(nob==0)
@@ -234,90 +236,100 @@ int main()
                 }
                 gotoxy(0,0);
 
+                ReadStudent();
 
+                ///choose book
+                int B_id;
+                char A_scholar[10];
+                int k=0;
 
-
-            ReadStudent();
-
-            ///choose book
-            int B_id;
-            char A_scholar[10];
-            int k=0;
-
-            printf("Enter book id: ");
-            scanf("%d", &B_id);
-            if(B_id>nob){
-                printf("xxxxxx\e[1mBook id was not found\e[mxxxxxx\n");
-            }
-            else{
-            printf("Enter scholar's id: ");
-            scanf(" %[^\n]", A_scholar);
-            ///delete book from file
-
-            lm=fopen("project.txt","w");
-            int pos=-1,pos2=-1;
-            for(int j=0; j<nos; j++)
-            {
-                k=0;
-                if(stricmp(A_scholar,studentList[j].S_id)==0)
+                printf("Enter book id: ");
+                scanf("%d", &B_id);
+                if(B_id==0 || B_id>nob)
                 {
-                    k=1;
-                    pos2=j;
-                    break;
+                    printf("xxxxxx\e[1mBook id was not found\e[mxxxxxx\n");
+                    gotoxy(0,nob+4);
                 }
-            }
-
-            if(k==1)
-            {
-                ///issuing date to issued books
-                time_t now=time(NULL);
-                struct tm *issue_time=localtime(&now);
-                strftime(TIME[nog].s,100,"%x %I:%M",issue_time);
-
-                ///adding to issued list
-
-                FILE* lg=fopen("issued books.txt","a");
-                fprintf(lg, "%d\n", nog);
-                fprintf(lg, "%s\n", bookList[B_id-1].book_name);
-                fprintf(lg, "%s\n", studentList[pos2].S_name);
-                fprintf(lg, "%s\n",TIME[nog].s);
-                nog++;
-
-                printf("---------\e[1mBook is Successfully Issued\e[m---------\n\n");
-
-                ///decreasing that book quantity
-                --bookList[B_id-1].quantity;
-                ///sorting books after when its out of stock
-                if(bookList[B_id-1].quantity==0)
+                else
                 {
-                    for(int i=B_id-1; i<nob-1; i++)
+                    if(bookList[B_id-1].quantity==0)
                     {
-
-                        bookList[i]=bookList[i+1];
+                        printf("***********Book iout of stock**********");
+                        gotoxy(0,nob+4);
                     }
-                    nob--;
+                    else
+                    {
+                        printf("Enter scholar's id: ");
+                        scanf(" %[^\n]", A_scholar);
+                        ///delete book from file
+
+                        lm=fopen("project.txt","w");
+                        int pos=-1,pos2=-1;
+                        for(int j=0; j<nos; j++)
+                        {
+                            k=0;
+                            if(stricmp(A_scholar,studentList[j].S_id)==0)
+                            {
+                                k=1;
+                                pos2=j;
+                                break;
+                            }
+                        }
+
+                        if(k==1)
+                        {
+                            ///issuing date to issued books
+                             ReadGivens();
+                            time_t now=time(NULL);
+                            struct tm *issue_time=localtime(&now);
+                            strftime(TIME[nog].s,100,"%x %I:%M",issue_time);
+
+                            ///adding to issued list
+
+                            FILE* lg=fopen("issued books.txt","a");
+                            fprintf(lg, "%d\n", nog+1);
+                            fprintf(lg, "%s\n", bookList[B_id-1].book_name);
+                            fprintf(lg, "%s\n", studentList[pos2].S_name);
+                            fprintf(lg, "%s\n",TIME[nog].s);
+                            nog++;
+
+                            printf("---------\e[1mBook is Successfully Issued\e[m---------\n\n");
+
+                            ///decreasing that book quantity
+                            --bookList[B_id-1].quantity;
+                            ///sorting books after when its out of stock
+                            // if(bookList[B_id-1].quantity==0)
+                            //  {
+                            //      for(int i=B_id-1; i<nob-1; i++)
+                            //      {
+
+                            //        bookList[i]=bookList[i+1];
+                            //  }
+                            // nob--;
+                            //  }
+
+                            fclose(lg);
+                        }
+                        else
+                            printf("xxxxxx\e[1mStudent id was not found\e[mxxxxxx\n");
+
+//                        for(int i=0; i<nob; i++)
+//                        {
+//                            fprintf(lm, "\n%d\n", bookList[i].id);
+//                            fprintf(lm, "%s\n", bookList[i].book_name);
+//                            fprintf(lm, "%s\n", bookList[i].author_name);
+//                            fprintf(lm, "%d\n", bookList[i].quantity);
+//                        }
+                        PrintBookDetails(lm,bookList,nob);
+                        fclose(lm);
+                        gotoxy(0,nob+4);
+                    }
                 }
-
-                fclose(lg);
-            }
-            else
-                printf("xxxxxx\e[1mStudent id was not found\e[mxxxxxx\n");
-
-            for(int i=0; i<nob; i++)
-            {
-                fprintf(lm, "\n%d\n", bookList[i].id);
-                fprintf(lm, "%s\n", bookList[i].book_name);
-                fprintf(lm, "%s\n", bookList[i].author_name);
-                fprintf(lm, "%d\n", bookList[i].quantity);
-            }
-            fclose(lm);
-            gotoxy(0,nob+4);
-            }
             }
         }
         else if(m==5)
         {
-             system("cls");
+            system("cls");
             ///Add Student
 
             ReadStudent();
@@ -350,7 +362,7 @@ int main()
         }
         else if(m==6)
         {
-             system("cls");
+            system("cls");
             ///view student
 
             ReadStudent();
@@ -371,7 +383,7 @@ int main()
         }
         else if(m==7)
         {
-             system("cls");
+            system("cls");
 
             FILE* lg=fopen("issued books.txt","r");
             if(lg == 0)
@@ -387,7 +399,7 @@ int main()
                 printf("\e[1mNO.\t  Issued book\t\t Student name\t\tMM/DD/YY\e[m\n");
                 for(int g=0; g<nog; g++)
                 {
-                    givenList[g].num=g+1;
+                    // givenList[g].num=g+1;
                     printf("\n%d", givenList[g].num);
                     printf("%20s", givenList[g].given_name);
                     printf("%24s", givenList[g].student_name);
@@ -401,8 +413,8 @@ int main()
         else
         {
             ///return book
-             system("cls");
-              FILE* lg=fopen("issued books.txt","r");
+            system("cls");
+            FILE* lg=fopen("issued books.txt","r");
             if(lg == 0)
             {
                 lg = fopen("issued books.txt", "w");
@@ -427,86 +439,91 @@ int main()
 
                 }
 
-            gotoxy(0,0);
+                gotoxy(0,0);
 
-            int G_id;
-            int r=0;
-            Readfile();
+                int G_id;
+                int r=0;
+                Readfile();
 
-            printf("Enter Book id: ");
-            scanf("%d", &G_id);
-
-            ///search the item in the booklist
-            for(int i=0; i<nob; i++)
-            {
-                r=0;
-                if(stricmp(bookList[i].book_name,givenList[G_id-1].given_name)==0)
+                printf("Enter Book id: ");
+                scanf("%d", &G_id);
+                if(G_id==0 || G_id>nog)
+                    printf("**********Book id not found*******");
+                else
                 {
+                    ///search the item in the booklist
+                    for(int i=0; i<nob; i++)
+                    {
+                        r=0;
+                        if(stricmp(bookList[i].book_name,givenList[G_id-1].given_name)==0)
+                        {
 
-                    ++bookList[i].quantity;
-                    r=1;
-                    break;
+                            ++bookList[i].quantity;
+                            r=1;
+                            break;
+                        }
+
+                    }
+                    ///increasing that books quantity if its found
+                    if(r==1)
+                    {
+
+                        lm=fopen("project.txt","w");
+                        for(int i=0; i<nob; i++)
+                        {
+                            fprintf(lm, "\n%d\n", bookList[i].id);
+                            fprintf(lm, "%s\n", bookList[i].book_name);
+                            fprintf(lm, "%s\n", bookList[i].author_name);
+                            fprintf(lm, "%d\n", bookList[i].quantity);
+                        }
+
+                    }
+                    //   else
+                    //   {
+                    //       ///adding that book if its not found
+                    //       bookList[nob].id=nob;
+                    //       printf("Enter author name: ");
+                    //       scanf(" %[^\n]",bookList[nob].author_name);
+                    //       bookList[nob].quantity=1;
+                    //       nob++;
+                    //       lm=fopen("project.txt","w");
+                    //       for(int i=0; i<nob; i++)
+                    //       {
+                    //           fprintf(lm, "\n%d\n", bookList[i].id);
+                    //           fprintf(lm, "%s\n", bookList[i].book_name);
+                    //           fprintf(lm, "%s\n", bookList[i].author_name);
+                    //           fprintf(lm, "%d\n", bookList[i].quantity);
+                    //       }
+
+
+                    //   }
+                    fclose(lm);
+                    ///searching in the givenlist to delete from issued list
+
+                    for(int j=G_id-1; j<nog-1; j++)
+                    {
+                        givenList[j]=givenList[j+1];
+
+                    }
+                    nog--;
+                    lg=fopen("issued books.txt","w");
+                    for(int g=0; g<nog; g++)
+                    {
+                        givenList[g].num=g+1;
+                        fprintf(lg, "\n%d\n", givenList[g].num);
+                        fprintf(lg, "%s\n", givenList[g].given_name);
+                        fprintf(lg, "%s\n", givenList[g].student_name);
+                        fprintf(lg, "%s\n",givenList[g].given_date);
+                    }
+                    fclose(lg);
+                    printf("**********\e[1mBook Returned Successfully\e[m**********\n\n");
+
                 }
 
             }
-            ///increasing that books quantity if its found
-            if(r==1)
-            {
-
-                lm=fopen("project.txt","w");
-                for(int i=0; i<nob; i++)
-                {
-                    fprintf(lm, "\n%d\n", bookList[i].id);
-                    fprintf(lm, "%s\n", bookList[i].book_name);
-                    fprintf(lm, "%s\n", bookList[i].author_name);
-                    fprintf(lm, "%d\n", bookList[i].quantity);
-                }
-
-            }
-            else
-            {
-                ///adding that book if its not found
-                bookList[nob].id=nob;
-                printf("Enter author name: ");
-                scanf(" %[^\n]",bookList[nob].author_name);
-                bookList[nob].quantity=1;
-                nob++;
-                lm=fopen("project.txt","w");
-                for(int i=0; i<nob; i++)
-                {
-                    fprintf(lm, "\n%d\n", bookList[i].id);
-                    fprintf(lm, "%s\n", bookList[i].book_name);
-                    fprintf(lm, "%s\n", bookList[i].author_name);
-                    fprintf(lm, "%d\n", bookList[i].quantity);
-                }
-
-
-            }
-            fclose(lm);
-            ///searching in the givenlist to delete from issued list
-
-            for(int j=G_id-1; j<nog-1; j++)
-            {
-                givenList[j]=givenList[j+1];
-
-            }
-            nog--;
-             lg=fopen("issued books.txt","w");
-            for(int g=0; g<nog; g++)
-            {
-                givenList[g].num=g+1;
-                fprintf(lg, "\n%d\n", givenList[g].num);
-                fprintf(lg, "%s\n", givenList[g].given_name);
-                fprintf(lg, "%s\n", givenList[g].student_name);
-                fprintf(lg, "%s\n",givenList[g].given_date);
-            }
-            fclose(lg);
-            printf("**********\e[1mBook Returned Successfully\e[m**********\n\n");
             gotoxy(0,nog+5);
-            }
 
         }
-
     }
     return 0;
 }
