@@ -81,6 +81,28 @@ void ReadStudent()
     fclose(ls);
 }
 
+void ShowBooks(struct Books bookList[100], int nob){
+     printf("\e[1mid\t | Book name |  \tAuthor name | \tQuantity\e[m\n");
+        for(int i=0; i<nob; i++)
+        {
+            bookList[i].id=i+1;
+            printf("\n%2d|", bookList[i].id);
+            printf("%17s|", bookList[i].book_name);
+            printf("%17s|", bookList[i].author_name);
+            printf("%10d", bookList[i].quantity);
+        }
+}
+
+void PrintBookDetails(FILE* lm, struct Books bookList[100], int nob){
+    for(int i=0; i<nob; i++)
+        {
+            fprintf(lm, "\n%d\n", bookList[i].id);
+            fprintf(lm, "%s\n", bookList[i].book_name);
+            fprintf(lm, "%s\n", bookList[i].author_name);
+            fprintf(lm, "%d\n", bookList[i].quantity);
+        }
+}
+
 int main()
 {
     FILE* lm=fopen("project.txt","r");
@@ -93,19 +115,18 @@ int main()
 
     while(1)
     {
-
         int m;
         printf("***************************************************************\e[1mWELCOME TO OUR LIBRARY\e[m***********************************************************************\n");
         printf("\e[1m1: View Books\n");
         printf("2: Add Books\n");
         printf("3: Display Books By auther\n");
-        printf("4: Issue Books\n");
+        printf("4: Issue Books\n"); //TODO: Can issue already issued books
         printf("5: Add Student\n");
         printf("6: View Student Info\n");
         printf("7: Issued books\n");
         printf("8: Return book\n");
         printf("9: Exit\n");
-        printf("Enter choice: \e[m");
+        printf("Enter choice: ");
         scanf("%d", &m);
         printf("\n");
 
@@ -119,19 +140,9 @@ int main()
                 printf("*********\e[1mThere are no books now\e[m**********\n\n");
             else
             {
-                printf("\e[1mid\t Book name  \tAuthor name  \tQuantity\e[m\n");
-                for(int i=0; i<nob; i++)
-                {
-                    bookList[i].id=i+1;
-                    printf("\n%2d", bookList[i].id);
-                    printf("%17s", bookList[i].book_name);
-                    printf("%17s", bookList[i].author_name);
-                    printf("%10d", bookList[i].quantity);
-                }
+                ShowBooks(bookList, nob);
                 printf("\n\n");
             }
-
-
 
         }
         else if(m==2)
@@ -168,14 +179,7 @@ int main()
             }
             ///write new array into the file
             lm=fopen("project.txt","w");
-
-            for(int i=0; i<nob; i++)
-            {
-                fprintf(lm, "\n%d\n", bookList[i].id);
-                fprintf(lm, "%s\n", bookList[i].book_name);
-                fprintf(lm, "%s\n", bookList[i].author_name);
-                fprintf(lm, "%d\n", bookList[i].quantity);
-            }
+            PrintBookDetails(lm, bookList, nob);
             printf("++++++\e[1mBook Is Successfully Added\e[m+++++++\n\n");
             fclose(lm);
 
@@ -242,26 +246,26 @@ int main()
 
             printf("Enter book id: ");
             scanf("%d", &B_id);
+            if(B_id>nob){
+                printf("xxxxxx\e[1mBook id was not found\e[mxxxxxx\n");
+            }
+            else{
             printf("Enter scholar's id: ");
             scanf(" %[^\n]", A_scholar);
             ///delete book from file
 
             lm=fopen("project.txt","w");
             int pos=-1,pos2=-1;
-
-
-
-                    for(int j=0; j<nos; j++)
-                    {
-                        k=0;
-                        if(stricmp(A_scholar,studentList[j].S_id)==0)
-                        {
-                            k=1;
-                            pos2=j;
-                            break;
-                        }
-
-                    }
+            for(int j=0; j<nos; j++)
+            {
+                k=0;
+                if(stricmp(A_scholar,studentList[j].S_id)==0)
+                {
+                    k=1;
+                    pos2=j;
+                    break;
+                }
+            }
 
             if(k==1)
             {
@@ -308,6 +312,7 @@ int main()
             }
             fclose(lm);
             gotoxy(0,nob+4);
+            }
             }
         }
         else if(m==5)
