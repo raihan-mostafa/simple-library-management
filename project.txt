@@ -2,27 +2,27 @@
 1
 cse one
 jamil sir
-0
+4
 
 2
 eee one
 taiseer sir
-1
+0
 
 3
 math one
 rashed sir
-2
+4
 
 4
 phy one
 mamun sir
-0
+2
 
 5
 urem one
 nazim sir
-0
+4
 
 6
 mdp one

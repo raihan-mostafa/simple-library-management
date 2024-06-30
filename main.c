@@ -104,6 +104,25 @@ void PrintBookDetails(FILE* lm, struct Books bookList[100], int nob)
         fprintf(lm, "%d\n", bookList[i].quantity);
     }
 }
+void PrintIssuedDetails(FILE* lg, struct Given givenList[100], int nog)
+{
+    for(int g=0; g<nog; g++)
+    {
+        givenList[g].num=g+1;
+        fprintf(lg, "\n%d\n", givenList[g].num);
+        fprintf(lg, "%s\n", givenList[g].given_name);
+        fprintf(lg, "%s\n", givenList[g].student_name);
+        fprintf(lg, "%s\n",givenList[g].given_date);
+    }
+}
+void ShowGivens(FILE* lg, struct Given givenList[100], int nog, int g)
+{
+    printf("%-2d", givenList[g].num);
+    printf("%20s", givenList[g].given_name);
+    printf("%24s", givenList[g].student_name);
+    printf("%25s", givenList[g].given_date);
+}
+
 
 int main()
 {
@@ -227,7 +246,7 @@ int main()
                 for(int i=0; i<nob; i++)
                 {
                     gotoxy(60,i+2);
-                    bookList[i].id=i+1;
+                   // bookList[i].id=i+1;
                     printf("%2d", bookList[i].id);
                     printf("%17s", bookList[i].book_name);
                     printf("%17s", bookList[i].author_name);
@@ -396,14 +415,16 @@ int main()
                 printf("...........\e[1mNo Books Issued Yet\e[m..........\n\n");
             else
             {
-                printf("\e[1mNO.\t  Issued book\t\t Student name\t\tMM/DD/YY\e[m\n");
+                printf("\e[1mNO.\t   Issued book\t\t  Student name\t\t MM/DD/YY\e[m\n");
                 for(int g=0; g<nog; g++)
                 {
                     // givenList[g].num=g+1;
-                    printf("\n%d", givenList[g].num);
-                    printf("%20s", givenList[g].given_name);
-                    printf("%24s", givenList[g].student_name);
-                    printf("%25s", givenList[g].given_date);
+                    printf("\n");
+//                    printf("%-2d", givenList[g].num);
+//                    printf("%20s", givenList[g].given_name);
+//                    printf("%24s", givenList[g].student_name);
+//                    printf("%25s", givenList[g].given_date);
+                    ShowGivens(lg, givenList, nog,g);
 
                 }
                 printf("\n\n");
@@ -430,11 +451,13 @@ int main()
                 for(int g=0; g<nog; g++)
                 {
                     gotoxy(60,g+1);
-                    givenList[g].num=g+1;
-                    printf("%d", givenList[g].num);
-                    printf("%20s", givenList[g].given_name);
-                    printf("%24s", givenList[g].student_name);
-                    printf("%25s", givenList[g].given_date);
+                  //  givenList[g].num=g+1;
+
+//                    printf("%-2d", givenList[g].num);
+//                    printf("%20s", givenList[g].given_name);
+//                    printf("%24s", givenList[g].student_name);
+//                    printf("%25s", givenList[g].given_date);
+                     ShowGivens(lg, givenList, nog, g);
                     gotoxy(60,g+2);
 
                 }
@@ -469,13 +492,14 @@ int main()
                     {
 
                         lm=fopen("project.txt","w");
-                        for(int i=0; i<nob; i++)
-                        {
-                            fprintf(lm, "\n%d\n", bookList[i].id);
-                            fprintf(lm, "%s\n", bookList[i].book_name);
-                            fprintf(lm, "%s\n", bookList[i].author_name);
-                            fprintf(lm, "%d\n", bookList[i].quantity);
-                        }
+//                        for(int i=0; i<nob; i++)
+//                        {
+//                            fprintf(lm, "\n%d\n", bookList[i].id);
+//                            fprintf(lm, "%s\n", bookList[i].book_name);
+//                            fprintf(lm, "%s\n", bookList[i].author_name);
+//                            fprintf(lm, "%d\n", bookList[i].quantity);
+//                        }
+                        PrintBookDetails(lm, bookList, nob);
 
                     }
                     //   else
@@ -507,14 +531,15 @@ int main()
                     }
                     nog--;
                     lg=fopen("issued books.txt","w");
-                    for(int g=0; g<nog; g++)
-                    {
-                        givenList[g].num=g+1;
-                        fprintf(lg, "\n%d\n", givenList[g].num);
-                        fprintf(lg, "%s\n", givenList[g].given_name);
-                        fprintf(lg, "%s\n", givenList[g].student_name);
-                        fprintf(lg, "%s\n",givenList[g].given_date);
-                    }
+//                    for(int g=0; g<nog; g++)
+//                    {
+//                        givenList[g].num=g+1;
+//                        fprintf(lg, "\n%d\n", givenList[g].num);
+//                        fprintf(lg, "%s\n", givenList[g].given_name);
+//                        fprintf(lg, "%s\n", givenList[g].student_name);
+//                        fprintf(lg, "%s\n",givenList[g].given_date);
+//                    }
+                    PrintIssuedDetails(lg, givenList , nog);
                     fclose(lg);
                     printf("**********\e[1mBook Returned Successfully\e[m**********\n\n");
 
