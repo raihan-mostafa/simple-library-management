@@ -141,7 +141,7 @@ int main()
         printf("\e[1m1: View Books\n");
         printf("2: Add Books\n");
         printf("3: Display Books By auther\n");
-        printf("4: Issue Books\n"); //TODO: Can issue already issued books
+        printf("4: Issue Books\n");
         printf("5: Add Student\n");
         printf("6: View Student Info\n");
         printf("7: Issued books\n");
@@ -246,7 +246,6 @@ int main()
                 for(int i=0; i<nob; i++)
                 {
                     gotoxy(60,i+2);
-                   // bookList[i].id=i+1;
                     printf("%2d", bookList[i].id);
                     printf("%17s", bookList[i].book_name);
                     printf("%17s", bookList[i].author_name);
@@ -298,7 +297,7 @@ int main()
                         if(k==1)
                         {
                             ///issuing date to issued books
-                             ReadGivens();
+                            ReadGivens();
                             time_t now=time(NULL);
                             struct tm *issue_time=localtime(&now);
                             strftime(TIME[nog].s,100,"%x %I:%M",issue_time);
@@ -316,29 +315,11 @@ int main()
 
                             ///decreasing that book quantity
                             --bookList[B_id-1].quantity;
-                            ///sorting books after when its out of stock
-                            // if(bookList[B_id-1].quantity==0)
-                            //  {
-                            //      for(int i=B_id-1; i<nob-1; i++)
-                            //      {
-
-                            //        bookList[i]=bookList[i+1];
-                            //  }
-                            // nob--;
-                            //  }
-
                             fclose(lg);
                         }
                         else
                             printf("xxxxxx\e[1mStudent id was not found\e[mxxxxxx\n");
 
-//                        for(int i=0; i<nob; i++)
-//                        {
-//                            fprintf(lm, "\n%d\n", bookList[i].id);
-//                            fprintf(lm, "%s\n", bookList[i].book_name);
-//                            fprintf(lm, "%s\n", bookList[i].author_name);
-//                            fprintf(lm, "%d\n", bookList[i].quantity);
-//                        }
                         PrintBookDetails(lm,bookList,nob);
                         fclose(lm);
                         gotoxy(0,nob+4);
@@ -418,12 +399,8 @@ int main()
                 printf("\e[1mNO.\t   Issued book\t\t  Student name\t\t MM/DD/YY\e[m\n");
                 for(int g=0; g<nog; g++)
                 {
-                    // givenList[g].num=g+1;
+
                     printf("\n");
-//                    printf("%-2d", givenList[g].num);
-//                    printf("%20s", givenList[g].given_name);
-//                    printf("%24s", givenList[g].student_name);
-//                    printf("%25s", givenList[g].given_date);
                     ShowGivens(lg, givenList, nog,g);
 
                 }
@@ -451,13 +428,7 @@ int main()
                 for(int g=0; g<nog; g++)
                 {
                     gotoxy(60,g+1);
-                  //  givenList[g].num=g+1;
-
-//                    printf("%-2d", givenList[g].num);
-//                    printf("%20s", givenList[g].given_name);
-//                    printf("%24s", givenList[g].student_name);
-//                    printf("%25s", givenList[g].given_date);
-                     ShowGivens(lg, givenList, nog, g);
+                    ShowGivens(lg, givenList, nog, g);
                     gotoxy(60,g+2);
 
                 }
@@ -492,35 +463,11 @@ int main()
                     {
 
                         lm=fopen("project.txt","w");
-//                        for(int i=0; i<nob; i++)
-//                        {
-//                            fprintf(lm, "\n%d\n", bookList[i].id);
-//                            fprintf(lm, "%s\n", bookList[i].book_name);
-//                            fprintf(lm, "%s\n", bookList[i].author_name);
-//                            fprintf(lm, "%d\n", bookList[i].quantity);
-//                        }
+
                         PrintBookDetails(lm, bookList, nob);
 
                     }
-                    //   else
-                    //   {
-                    //       ///adding that book if its not found
-                    //       bookList[nob].id=nob;
-                    //       printf("Enter author name: ");
-                    //       scanf(" %[^\n]",bookList[nob].author_name);
-                    //       bookList[nob].quantity=1;
-                    //       nob++;
-                    //       lm=fopen("project.txt","w");
-                    //       for(int i=0; i<nob; i++)
-                    //       {
-                    //           fprintf(lm, "\n%d\n", bookList[i].id);
-                    //           fprintf(lm, "%s\n", bookList[i].book_name);
-                    //           fprintf(lm, "%s\n", bookList[i].author_name);
-                    //           fprintf(lm, "%d\n", bookList[i].quantity);
-                    //       }
 
-
-                    //   }
                     fclose(lm);
                     ///searching in the givenlist to delete from issued list
 
@@ -531,15 +478,7 @@ int main()
                     }
                     nog--;
                     lg=fopen("issued books.txt","w");
-//                    for(int g=0; g<nog; g++)
-//                    {
-//                        givenList[g].num=g+1;
-//                        fprintf(lg, "\n%d\n", givenList[g].num);
-//                        fprintf(lg, "%s\n", givenList[g].given_name);
-//                        fprintf(lg, "%s\n", givenList[g].student_name);
-//                        fprintf(lg, "%s\n",givenList[g].given_date);
-//                    }
-                    PrintIssuedDetails(lg, givenList , nog);
+                    PrintIssuedDetails(lg, givenList, nog);
                     fclose(lg);
                     printf("**********\e[1mBook Returned Successfully\e[m**********\n\n");
 
